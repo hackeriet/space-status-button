@@ -1,0 +1,11 @@
+[Unit]
+Description=Button for announcing space presence
+
+[Service]
+Type=simple
+Environment=BUTTON_PIN=0 LIGHT_PIN=1
+ExecStart=/usr/local/bin/buttond
+Restart=always
+
+[Install]
+WantedBy=default.target
