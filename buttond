@@ -1,0 +1,27 @@
+#!/bin/bash
+# Check button state and light up led when pressed
+
+set -eu
+
+BUTTON_PIN=${BUTTON_PIN:-0}
+LIGHT_PIN=${LIGHT_PIN:-1}
+
+# Configure pins
+gpio mode $BUTTON_PIN in
+gpio mode $LIGHT_PIN out
+
+# Force initial update
+last_state=-1
+
+while true; do
+	btn_state=$(gpio read $BUTTON_PIN)
+	
+	# Only write to pin when needed
+	if [ x$btn_state != x$last_state ]; then
+		gpio write $LIGHT_PIN $btn_state
+      echo "Button state set to $btn_state"
+		last_state=$btn_state
+	fi
+
+	sleep 0.1
+done
