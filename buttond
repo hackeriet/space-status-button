@@ -14,14 +14,14 @@ gpio mode $LIGHT_PIN out
 last_state=-1
 
 while true; do
-	btn_state=$(gpio read $BUTTON_PIN)
-	
-	# Only write to pin when needed
-	if [ x$btn_state != x$last_state ]; then
-		gpio write $LIGHT_PIN $btn_state
-      echo "Button state set to $btn_state"
-		last_state=$btn_state
-	fi
+  btn_state=$(gpio read $BUTTON_PIN)
 
-	sleep 0.1
+  # Only write to pin when needed
+  if [ x$btn_state != x$last_state ]; then
+    gpio write $LIGHT_PIN $btn_state
+    echo "Button state set to $btn_state"
+    last_state=$btn_state
+  fi
+
+  sleep 0.1
 done
