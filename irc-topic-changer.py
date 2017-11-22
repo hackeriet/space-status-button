@@ -47,7 +47,7 @@ def journal_reader():
     search = re.search(r"Button state set to (0|1)", line)
     if search is not None:
       button_state = search.group(1)
-      if button_state == '0':
+      if button_state == '1':
         changetopic("OPEN")
       else:
         changetopic("CLOSED")
