@@ -16,7 +16,7 @@ PORT = 6667
 
 NICK = "hackeriet-button"
 REALNAME = "space-status-button"
-CHANNEL = "#hackeriet"
+CHANNEL = "#oslohackerspace"
 
 s = socket.socket()
 s.connect((HOST, PORT))
