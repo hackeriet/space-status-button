@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# Original code by Pepijn de Vos
+# IRC client code derived from work by Pepijn de Vos
 # https://badge.sha2017.org/projects/irc_pager
 
 import socket
