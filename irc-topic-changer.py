@@ -56,7 +56,7 @@ def journal_reader():
         changetopic("CLOSED")
 
     # TODO: logger.verbose
-    print(re.sub(r"[\r\n]+", "", line))
+    print("** " + re.sub(r"[\r\n]+", "", line))
 
 # Read the journal on a separate thread to determine if the button
 # has been pressed.
@@ -78,12 +78,13 @@ while 1:
     # Topic advertised on join
     if parts[1] == "332":
       topic = ' '.join(parts[4:])[1:]
+      print("** Initial topic saved to cache: %s" % topic)
 
     # Catch updated topics
     if parts[1] == "TOPIC":
       topic = ' '.join(parts[3:])[1:]
       # TODO: logger.<?>
-      print("New topic saved to cache: '%s'" % topic)
+      print("** New topic saved to cache: %s" % topic)
 
     # TODO: logger.debug
     print(line)
