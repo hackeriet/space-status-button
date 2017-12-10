@@ -40,9 +40,6 @@ sendline("NICK %s" % NICK)
 sendline("USER %s 0 * :%s" % (NICK, REALNAME))
 sendline("JOIN %s" % CHANNEL)
 
-# TODO: read the topic on start and subsequent topic changes
-#       or read the topic before changing it each time
-
 def journal_reader():
   proc = Popen(["journalctl", "-f", "-u", "buttond"], stdout=PIPE, bufsize=1)
   for line in iter(proc.stdout.readline, b''):
