@@ -1,0 +1,12 @@
+[Unit]
+Description=Changes IRC topic when space status button is pressed
+Wants=network-online.target
+
+[Service]
+Type=simple
+ExecStart=/usr/local/bin/irc-topic-changer.py
+Restart=always
+RestartSec=60
+
+[Install]
+WantedBy=network-online.target
