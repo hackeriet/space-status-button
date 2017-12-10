@@ -30,9 +30,11 @@ def readline():
   return f.readline().rstrip()
 
 def changetopic(status):
-  # The topic is expected to contain "space is: <topic> |"
-  new_topic = re.sub(r"(space is: )([^\|]+)", r"\1%s " % status, topic)
-  sendline("TOPIC %s :%s" % (CHANNEL, new_topic))
+  # Avoid setting an empty topic on start
+  if len(topic) > 0:
+    # The existing topic is expected to contain "space is: <topic> |"
+    new_topic = re.sub(r"(space is: )([^\|]+)", r"\1%s " % status, topic)
+    sendline("TOPIC %s :%s" % (CHANNEL, new_topic))
 
 sendline("NICK %s" % NICK)
 sendline("USER %s 0 * :%s" % (NICK, REALNAME))
