@@ -75,12 +75,12 @@ while 1:
     if parts[0] == "PING":
       sendline("PONG %s" % line[1])
 
-    # Topic advertised on join
+    # Save advertised topic on join
     if parts[1] == "332":
       topic = ' '.join(parts[4:])[1:]
       print("** Initial topic saved to cache: %s" % topic)
 
-    # Catch updated topics
+    # Save updated updated topics
     if parts[1] == "TOPIC":
       topic = ' '.join(parts[3:])[1:]
       # TODO: logger.<?>
