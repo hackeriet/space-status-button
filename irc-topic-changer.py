@@ -44,8 +44,9 @@ sendline("JOIN %s" % CHANNEL)
 #       or read the topic before changing it each time
 
 def journal_reader():
-  proc = Popen(["journalctl", "-f", "-u", "buttond"], stdout=PIPE, bufsize=1, encoding=ENCODING)
-  for line in iter(proc.stdout.readline, ''):
+  proc = Popen(["journalctl", "-f", "-u", "buttond"], stdout=PIPE, bufsize=1)
+  for line in iter(proc.stdout.readline, b''):
+    line = line.decode('utf-8')
     search = re.search(r"Button state set to (0|1)", line)
     if search is not None:
       button_state = search.group(1)
