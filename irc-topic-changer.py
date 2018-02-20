@@ -6,6 +6,7 @@ import socket
 import re
 import threading
 import sys
+import logging
 from subprocess import Popen, PIPE
 
 ENCODING = "UTF-8"
@@ -49,8 +50,7 @@ def journal_reader():
             else:
                 changetopic("CLOSED")
 
-        # TODO: logger.verbose
-        print("** " + re.sub(r"[\r\n]+", "", line))
+        logging.debug(re.sub(r"[\r\n]+", "", line))
 
 # Read the journal on a separate thread to determine if the button
 # has been pressed.
@@ -64,12 +64,15 @@ while 1:
     try:
         line = f.readline().rstrip()
     except UnicodeDecodeError as e:
-        print("Failed to decode; ignoring line.", e, file=sys.stderr)
+        logging.error("Failed to decode; ignoring line.")
+        logging.error(e)
         continue
 
     parts = line.split()
 
     if parts:
+        logging.debug(line)
+
         # Perform the most important IRC task
         if parts[0] == "PING":
             sendline("PONG %s" % line[1])
@@ -77,13 +80,9 @@ while 1:
         # Save advertised topic on join
         if parts[1] == "332":
             topic = ' '.join(parts[4:])[1:]
-            print("** Initial topic saved to cache: %s" % topic)
+            logging.info("Initial topic saved to cache: %s", topic)
 
         # Save updated updated topics
         if parts[1] == "TOPIC":
             topic = ' '.join(parts[3:])[1:]
-            # TODO: logger.<?>
-            print("** New topic saved to cache: %s" % topic)
-
-        # TODO: logger.debug
-        print(line)
+            logging.info("New topic saved to cache: %s", topic)
