@@ -6,6 +6,7 @@ import socket
 import re
 import threading
 import subprocess
+import sys
 from subprocess import Popen, PIPE
 
 ENCODING = "UTF-8"
