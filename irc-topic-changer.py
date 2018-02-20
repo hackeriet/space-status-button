@@ -9,6 +9,8 @@ import sys
 import logging
 from subprocess import Popen, PIPE
 
+logging.basicConfig(level=logging.DEBUG)
+
 ENCODING = "UTF-8"
 EOL = "\r\n"
 HOST = "chat.freenode.net"
