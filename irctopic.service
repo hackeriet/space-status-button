@@ -7,7 +7,7 @@ Type=simple
 Environment=PYTHONUNBUFFERED=1
 ExecStart=/usr/local/bin/irc-topic-changer.py
 Restart=always
-RestartSec=60
+RestartSec=15
 
 [Install]
 WantedBy=network-online.target
