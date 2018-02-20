@@ -26,9 +26,6 @@ f = s.makefile(mode='r', encoding=ENCODING, newline=EOL)
 def sendline(line):
   return s.send(bytes("%s%s" % (line, EOL), ENCODING))
 
-def readline():
-  return f.readline().rstrip()
-
 def changetopic(status):
   # Avoid setting an empty topic on start
   if len(topic) > 0:
@@ -64,7 +61,12 @@ topic = ''
 
 # Handle IRC connection and its events
 while 1:
-  line = readline()
+  try:
+    line = f.readline().rstrip()
+  except UnicodeDecodeError as e:
+    print("Failed to decode; ignoring line.", e, file=sys.stderr)
+    continue
+
   parts = line.split()
 
   if parts:
