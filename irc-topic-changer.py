@@ -90,6 +90,11 @@ while 1:
             topic = ' '.join(parts[4:])[1:]
             logging.info("Initial topic saved to cache: %s", topic)
 
+        # Nickname already taken
+        if parts[1] == "433":
+            logging.error("Exiting (nickname already taken)")
+            exit(1)
+
         # Save updated updated topics
         if parts[1] == "TOPIC":
             topic = ' '.join(parts[3:])[1:]
