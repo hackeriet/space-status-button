@@ -5,8 +5,9 @@
 import socket
 import re
 import threading
-import sys
 import logging
+from sys import exit
+from os import getenv
 from subprocess import Popen, PIPE
 
 logging.basicConfig(level=logging.DEBUG)
@@ -17,9 +18,9 @@ HOST = "chat.freenode.net"
 #HOST = "127.0.0.1"
 PORT = 6667
 
-NICK = "hackeriet-button"
+NICK = getenv("IRC_NICK", default="hackeriet-button")
 REALNAME = "space-status-button"
-CHANNEL = "#oslohackerspace"
+CHANNEL = getenv("IRC_CHANNEL", default="#oslohackerspace")
 
 s = socket.socket()
 s.connect((HOST, PORT))
@@ -56,7 +57,7 @@ def journal_reader():
 
 # Read the journal on a separate thread to determine if the button
 # has been pressed.
-t = threading.Thread(name='child procs', target=journal_reader)
+t = threading.Thread(name='child procs', target=journal_reader, daemon=True)
 t.start()
 
 topic = ''
@@ -69,6 +70,11 @@ while 1:
         logging.error("Failed to decode; ignoring line.")
         logging.error(e)
         continue
+
+    # Reading an empty line signifies a dead connection
+    if not line:
+        logging.error("Exiting (socket closed)")
+        exit(1)
 
     parts = line.split()
 
@@ -83,6 +89,11 @@ while 1:
         if parts[1] == "332":
             topic = ' '.join(parts[4:])[1:]
             logging.info("Initial topic saved to cache: %s", topic)
+
+        # Nickname already taken
+        if parts[1] == "433":
+            logging.error("Exiting (nickname already taken)")
+            exit(1)
 
         # Save updated updated topics
         if parts[1] == "TOPIC":
