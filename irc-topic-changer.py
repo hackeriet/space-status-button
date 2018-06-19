@@ -5,8 +5,8 @@
 import socket
 import re
 import threading
-import sys
 import logging
+from sys import exit
 from subprocess import Popen, PIPE
 
 logging.basicConfig(level=logging.DEBUG)
@@ -56,7 +56,7 @@ def journal_reader():
 
 # Read the journal on a separate thread to determine if the button
 # has been pressed.
-t = threading.Thread(name='child procs', target=journal_reader)
+t = threading.Thread(name='child procs', target=journal_reader, daemon=True)
 t.start()
 
 topic = ''
@@ -69,6 +69,11 @@ while 1:
         logging.error("Failed to decode; ignoring line.")
         logging.error(e)
         continue
+
+    # Reading an empty line signifies a dead connection
+    if not line:
+        logging.error("Exiting (socket closed)")
+        exit(1)
 
     parts = line.split()
 
