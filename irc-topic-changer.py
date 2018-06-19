@@ -7,6 +7,7 @@ import re
 import threading
 import logging
 from sys import exit
+from os import getenv
 from subprocess import Popen, PIPE
 
 logging.basicConfig(level=logging.DEBUG)
@@ -17,9 +18,9 @@ HOST = "chat.freenode.net"
 #HOST = "127.0.0.1"
 PORT = 6667
 
-NICK = "hackeriet-button"
+NICK = getenv("IRC_NICK", default="hackeriet-button")
 REALNAME = "space-status-button"
-CHANNEL = "#oslohackerspace"
+CHANNEL = getenv("IRC_CHANNEL", default="#oslohackerspace")
 
 s = socket.socket()
 s.connect((HOST, PORT))
