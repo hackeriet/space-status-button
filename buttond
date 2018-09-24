@@ -14,15 +14,19 @@ gpio mode $LIGHT_PIN out
 # Force initial update
 last_state=-1
 
+mqtt_notify() {
+  mosquitto_pub --capath /etc/ssl/certs/ -h matrix.hackeriet.no -p 8883 -t 'hackeriet/space_state' -d -u humladoor -P $MQTT_PASS -m $1
+}
+
 while true; do
   btn_state=$(gpio read $BUTTON_PIN)
 
   # Only write to pin when needed
   if [ x$btn_state != x$last_state ]; then
     if [ "$btn_state" -eq "1" ]; then
-      mosquitto_pub --capath /etc/ssl/certs/ -h matrix.hackeriet.no -p 8883 -t 'hackeriet/space_state' -m OPEN -d -u humladoor -P $MQTT_PASS
+      mqtt_notify OPEN
     else
-      mosquitto_pub --capath /etc/ssl/certs/ -h matrix.hackeriet.no -p 8883 -t 'hackeriet/space_state' -m CLOSED -d -u humladoor -P $MQTT_PASS
+      mqtt_notify CLOSED
     fi
     gpio write $LIGHT_PIN $btn_state
     echo "Button state set to $btn_state"
