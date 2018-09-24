@@ -23,14 +23,15 @@ while true; do
 
   # Only write to pin when needed
   if [ x$btn_state != x$last_state ]; then
+    gpio write $LIGHT_PIN $btn_state
+    echo "Button state set to $btn_state"
+    last_state=$btn_state
+
     if [ "$btn_state" -eq "1" ]; then
       mqtt_notify OPEN
     else
       mqtt_notify CLOSED
     fi
-    gpio write $LIGHT_PIN $btn_state
-    echo "Button state set to $btn_state"
-    last_state=$btn_state
   fi
 
   sleep 0.1
