@@ -3,7 +3,7 @@ Description=Button for announcing space presence
 
 [Service]
 Type=simple
-Environment=BUTTON_PIN=0 LIGHT_PIN=1
+Environment=BUTTON_PIN=0 LIGHT_PIN=1 MQTT_PASS=somethingsomething
 ExecStart=/usr/local/bin/buttond
 Restart=always
 

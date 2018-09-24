@@ -5,6 +5,7 @@ set -eu
 
 BUTTON_PIN=${BUTTON_PIN:-0}
 LIGHT_PIN=${LIGHT_PIN:-1}
+MQTT_PASS=${MQTT_PASS:-changeservice}
 
 # Configure pins
 gpio mode $BUTTON_PIN in
@@ -18,6 +19,11 @@ while true; do
 
   # Only write to pin when needed
   if [ x$btn_state != x$last_state ]; then
+    if [ "$btn_state" -eq "1" ]; then
+      mosquitto_pub --capath /etc/ssl/certs/ -h matrix.hackeriet.no -p 8883 -t 'hackeriet/space_state' -m OPEN -d -u humladoor -P $MQTT_PASS
+    else
+      mosquitto_pub --capath /etc/ssl/certs/ -h matrix.hackeriet.no -p 8883 -t 'hackeriet/space_state' -m CLOSED -d -u humladoor -P $MQTT_PASS
+    fi
     gpio write $LIGHT_PIN $btn_state
     echo "Button state set to $btn_state"
     last_state=$btn_state
