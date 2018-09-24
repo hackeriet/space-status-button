@@ -15,6 +15,7 @@ gpio mode $LIGHT_PIN out
 last_state=-1
 
 mqtt_notify() {
+  echo -n 'mqtt: '
   mosquitto_pub --capath /etc/ssl/certs/ -h matrix.hackeriet.no -p 8883 -t 'hackeriet/space_state' -d -u humladoor -P $MQTT_PASS -m $1
 }
 
@@ -27,11 +28,14 @@ while true; do
     echo "Button state set to $btn_state"
     last_state=$btn_state
 
+    # Allow for e.g. MQTT network errors to occur without exiting the program
+    set +e
     if [ "$btn_state" -eq "1" ]; then
       mqtt_notify OPEN
     else
       mqtt_notify CLOSED
     fi
+    set -e
   fi
 
   sleep 0.1
