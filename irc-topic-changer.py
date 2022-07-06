@@ -14,7 +14,7 @@ logging.basicConfig(level=logging.DEBUG)
 
 ENCODING = "UTF-8"
 EOL = "\r\n"
-HOST = "chat.freenode.net"
+HOST = "irc.libera.chat"
 #HOST = "127.0.0.1"
 PORT = 6667
 
