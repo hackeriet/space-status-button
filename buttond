@@ -16,7 +16,7 @@ last_state=-1
 
 mqtt_notify() {
   echo -n 'mqtt: '
-  mosquitto_pub --capath /etc/ssl/certs/ -h matrix.hackeriet.no -p 8883 -t 'hackeriet/space_state' -d -u humladoor -P $MQTT_PASS -m $1
+  mosquitto_pub --capath /etc/ssl/certs/ -h matrix.hackeriet.no -p 8883 -t 'hackeriet/space_state' -d -u humladoor -P $MQTT_PASS -r -m $1
 }
 
 while true; do
