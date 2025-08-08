@@ -6,8 +6,7 @@ Expected to run on a Raspberry Pi
 
 ## `buttond`
 A program to watch changes on a GPIO pin
-  - Depends on `gpio` to read GPIO pin status
-  - Depends on `mqtt_publish` to publish messages to an MQTT broker
+  - Depends on `mosquitto-clients` to publish messages to an MQTT broker
 
 ## `irc-topic-changer.py`
 An IRC client daemon

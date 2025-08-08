@@ -4,7 +4,8 @@ Wants=network-online.target
 
 [Service]
 Type=simple
-Environment=PYTHONUNBUFFERED=1
+User=button
+Environment=PYTHONUNBUFFERED=1 DEBUG=1 IRC_PASS=PleaseSetThisCorrectly
 ExecStart=/usr/local/bin/irc-topic-changer.py
 Restart=always
 RestartSec=15

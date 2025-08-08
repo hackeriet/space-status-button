@@ -8,34 +8,36 @@ LIGHT_PIN=${LIGHT_PIN:-1}
 MQTT_PASS=${MQTT_PASS:-changeservice}
 
 # Configure pins
-gpio mode $BUTTON_PIN in
-gpio mode $LIGHT_PIN out
+raspi-gpio set $BUTTON_PIN ip
+raspi-gpio set $LIGHT_PIN op
 
 # Force initial update
 last_state=-1
 
 mqtt_notify() {
+  # Allow for e.g. MQTT network errors to occur without exiting the program
+  set +e
   echo -n 'mqtt: '
-  mosquitto_pub --capath /etc/ssl/certs/ -h matrix.hackeriet.no -p 8883 -t 'hackeriet/space_state' -d -u humladoor -P $MQTT_PASS -r -m $1
+  mosquitto_pub --capath /etc/ssl/certs/ -h mq.hackeriet.no -p 8883 -t 'hackeriet/space_state' -d -u humladoor -P $MQTT_PASS -r -m $1
+  set -e
 }
 
 while true; do
-  btn_state=$(gpio read $BUTTON_PIN)
+  # awk snipped from https://ma2shita.medium.com/how-to-use-raspi-gpio-instead-of-gpio-of-wriring-pi-af2ab00eda57
+  btn_state=$(raspi-gpio get $BUTTON_PIN | awk -v RS=" " -F "=" -v k="level" '$1==k {print $2}')
 
   # Only write to pin when needed
   if [ x$btn_state != x$last_state ]; then
-    gpio write $LIGHT_PIN $btn_state
     echo "Button state set to $btn_state"
     last_state=$btn_state
 
-    # Allow for e.g. MQTT network errors to occur without exiting the program
-    set +e
     if [ "$btn_state" -eq "1" ]; then
+      raspi-gpio set $LIGHT_PIN dh
       mqtt_notify OPEN
     else
+      raspi-gpio set $LIGHT_PIN dl
       mqtt_notify CLOSED
     fi
-    set -e
   fi
 
   sleep 0.1
